@@ -1,20 +1,95 @@
 ﻿// WordCount.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
 //
 
-#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-int main()
+#define NAME "WordCount"
+#define P_WORD "-w"
+#define P_CHAR "-c"
+#define P_HELP "--help"
+
+
+
+int CountWithCharacter(FILE* fp);
+int CountWithWord(FILE* fp);
+void printHelp();
+
+int main(int argc ,char* argv[])
 {
-    std::cout << "Hello World!\n";
+//argv[1]是控制参数，argv[2]是文件地址。
+	
+	printf("\n");
+	if (argc == 1||strcmp(argv[1], "--help") == 0 ) {
+		//没有参数或者控制参数为--help
+		//输出指令帮助
+		printHelp();
+	}else if(strcmp(argv[1], "-w") == 0|| strcmp(argv[1], "-c") == 0){
+		//统计单词数
+		if (argc == 2) {
+			printf("文件地址为空\n");
+			return 0;
+		}
+		errno_t err;
+		FILE *fp;
+		if ((err = fopen_s(&fp,argv[2], "r")) != 0) {
+			printf("文件地址有误\n");
+			return 0;
+		};
+
+		if (strcmp(argv[1], "-c") == 0) {
+			printf("字符数：%d",CountWithCharacter(fp));
+		}
+		else {
+			printf("单词数：%d", CountWithWord(fp));
+		}
+		fclose(fp);
+	}else {
+		//参数错误
+		printf("未知的参数,输入%s %s获取帮助\n",NAME,P_HELP);
+	}
 }
 
-// 运行程序: Ctrl + F5 或调试 >“开始执行(不调试)”菜单
-// 调试程序: F5 或调试 >“开始调试”菜单
+//输出命令行指令帮助
+void printHelp() {
+	printf("\
+	usage: %s [parameter] [input_file_name]\n\n\
+	Parameters:\n\
+	%s	: 统计单词数量\n\
+	%s	: 统计字符数量\n\n\
+	Input file name	:被统计文件的地址\n",NAME, P_WORD, P_CHAR);
+}
 
-// 入门使用技巧: 
-//   1. 使用解决方案资源管理器窗口添加/管理文件
-//   2. 使用团队资源管理器窗口连接到源代码管理
-//   3. 使用输出窗口查看生成输出和其他消息
-//   4. 使用错误列表窗口查看错误
-//   5. 转到“项目”>“添加新项”以创建新的代码文件，或转到“项目”>“添加现有项”以将现有代码文件添加到项目
-//   6. 将来，若要再次打开此项目，请转到“文件”>“打开”>“项目”并选择 .sln 文件
+
+//统计字符数
+int CountWithCharacter(FILE* fp) {
+	fseek(fp, 0, SEEK_END);
+	int result=ftell(fp);
+	fseek(fp, 0, SEEK_SET);
+	return result;
+}
+
+
+//统计单词数
+int CountWithWord(FILE* fp) {
+	char ch;
+	int result = 1;
+	bool flag=true;//假设第一位是分隔符，为假时表示前一位是单词，为真时前一位表示是分隔符，循环结束后为真表示末尾是分隔符
+	while ((ch = fgetc(fp) )!= EOF) {
+		
+		if ((ch == ',' || ch == ' ')&&flag==false) {//是分隔符，而且不是紧挨着的分隔符，单词数+1
+			result++;
+			flag = true;
+		}
+		else if ((ch == ',' || ch == ' ') && flag == true) {//是分隔符，但却是首字符或者是紧挨着的分隔符，所以不加
+		}
+		else  {//是单词内容
+			flag = false;
+		}
+		   
+	}
+	if (flag) result--;//最后一位是分隔符，必有一个分隔符白加，所以-1
+	return result;
+}
+
