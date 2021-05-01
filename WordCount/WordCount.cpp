@@ -26,7 +26,7 @@ int main(int argc ,char* argv[])
 		//输出指令帮助
 		printHelp();
 	}else if(strcmp(argv[1], "-w") == 0|| strcmp(argv[1], "-c") == 0){
-		//统计单词数
+		//参数正确
 		if (argc == 2) {
 			printf("文件地址为空\n");
 			return 0;
@@ -37,11 +37,11 @@ int main(int argc ,char* argv[])
 			printf("文件地址有误\n");
 			return 0;
 		};
-
-		if (strcmp(argv[1], "-c") == 0) {
+        
+		if (strcmp(argv[1], "-c") == 0) {//统计字符数
 			printf("字符数：%d",CountWithCharacter(fp));
 		}
-		else {
+		else {//统计单词数
 			printf("单词数：%d", CountWithWord(fp));
 		}
 		fclose(fp);
