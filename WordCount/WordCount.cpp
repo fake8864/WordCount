@@ -21,12 +21,12 @@ int main(int argc ,char* argv[])
 //argv[1]是控制参数，argv[2]是文件地址。
 	
 	printf("\n");
-	if (argc == 1||strcmp(argv[1], "--help") == 0 ) {
+	if (argc == 1||strcmp(argv[1], P_HELP) == 0 ) {
 		//没有参数或者控制参数为--help
 		//输出指令帮助
 		printHelp();
 	}
-	else if(strcmp(argv[1], "-w") == 0|| strcmp(argv[1], "-c") == 0){
+	else if(strcmp(argv[1], P_WORD) == 0|| strcmp(argv[1], P_CHAR) == 0){
 		//参数正确
 		if (argc == 2) {
 			printf("文件地址为空\n");
@@ -39,7 +39,7 @@ int main(int argc ,char* argv[])
 			return 0;
 		};
         
-		if (strcmp(argv[1], "-c") == 0) {//统计字符数
+		if (strcmp(argv[1], P_CHAR) == 0) {//统计字符数
 			printf("字符数：%d\n",CountWithCharacter(fp));
 		}
 		else {//统计单词数
