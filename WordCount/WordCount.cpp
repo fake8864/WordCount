@@ -92,6 +92,7 @@ int CountWithWord(FILE* fp) {
 		}	   
 	}
 	if (flag) result--;//最后一位是分隔符，必有一个分隔符白加，所以-1
+	fseek(fp, 0, SEEK_SET);
 	return result;
 }
 
